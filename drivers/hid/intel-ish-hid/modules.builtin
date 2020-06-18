@@ -1,0 +1,3 @@
+drivers/hid/intel-ish-hid/intel-ishtp.ko
+drivers/hid/intel-ish-hid/intel-ish-ipc.ko
+drivers/hid/intel-ish-hid/intel-ishtp-hid.ko

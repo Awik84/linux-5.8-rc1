@@ -1,0 +1,1 @@
+__cached_set_-e;_TMP_".__.tmp";_TMPO_".__.o";_if____gcc_-Werror__-D__KERNEL___-DCONFIG_CC_STACKPROTECTOR___-fno-strict-aliasing_-Wall_-Wstrict-prototypes_-fno-zero-initialized-in-bss_-fno-builtin_-ffreestanding_-c_-Os_-mcmodel_large_-m64_-fno-PIE_-c_-x_c_/dev/null_-o_"_TMP"__>/dev/null_2>&1;_then_echo_"-fno-PIE";_else_echo_"";_fi;_rm_-f_"_TMP"_"_TMPO" := -fno-PIE

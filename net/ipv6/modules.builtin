@@ -1,0 +1,2 @@
+net/ipv6/ipv6.ko
+net/ipv6/inet6_hashtables.ko

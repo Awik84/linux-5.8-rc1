@@ -1,0 +1,8 @@
+arch/x86/crypto/sha1-ssse3.ko
+arch/x86/crypto/sha256-ssse3.ko
+arch/x86/events/intel/intel-rapl-perf.ko
+arch/x86/events/intel/intel-uncore.ko
+arch/x86/events/intel/intel-cstate.ko
+arch/x86/kernel/msr.ko
+arch/x86/kernel/cpuid.ko
+arch/x86/platform/intel/iosf_mbi.ko

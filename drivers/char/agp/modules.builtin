@@ -1,0 +1,6 @@
+drivers/char/agp/agpgart.ko
+drivers/char/agp/amd64-agp.ko
+drivers/char/agp/intel-agp.ko
+drivers/char/agp/intel-gtt.ko
+drivers/char/agp/sis-agp.ko
+drivers/char/agp/via-agp.ko

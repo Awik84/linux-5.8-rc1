@@ -1,0 +1,4 @@
+drivers/char/tpm/tpm.ko
+drivers/char/tpm/tpm_tis_core.ko
+drivers/char/tpm/tpm_tis.ko
+drivers/char/tpm/tpm_crb.ko

@@ -1,0 +1,13 @@
+drivers/char/raw.ko
+drivers/char/nvram.ko
+drivers/char/agp/agpgart.ko
+drivers/char/agp/amd64-agp.ko
+drivers/char/agp/intel-agp.ko
+drivers/char/agp/intel-gtt.ko
+drivers/char/agp/sis-agp.ko
+drivers/char/agp/via-agp.ko
+drivers/char/hw_random/rng-core.ko
+drivers/char/tpm/tpm.ko
+drivers/char/tpm/tpm_tis_core.ko
+drivers/char/tpm/tpm_tis.ko
+drivers/char/tpm/tpm_crb.ko

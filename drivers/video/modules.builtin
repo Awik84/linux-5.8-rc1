@@ -1,0 +1,5 @@
+drivers/video/backlight/backlight.ko
+drivers/video/fbdev/core/fb.ko
+drivers/video/fbdev/core/cfbfillrect.ko
+drivers/video/fbdev/core/cfbcopyarea.ko
+drivers/video/fbdev/core/cfbimgblt.ko

@@ -1,0 +1,125 @@
+[
+    {
+        "id": "6813",
+        "name": "Add hash action without specifying hash algorithm (invalid)",
+        "category": [
+            "actions",
+            "hash"
+        ],
+        "setup": [
+            [
+                "$TC action flush action hash",
+                0,
+                1,
+                255
+            ]
+        ],
+        "cmdUnderTest": "$TC action add action hash index 100",
+        "expExitCode": "255",
+        "verifyCmd": "$TC action list action hash",
+        "matchPattern": "action order [0-9]*: hash basis 0 pipe.*index 100 ref",
+        "matchCount": "0",
+        "teardown": [
+            "$TC action flush action hash"
+        ]
+    },
+    {
+        "id": "9cdb",
+        "name": "Add hash action with asym_l4 algorithm",
+        "category": [
+            "actions",
+            "hash"
+        ],
+        "setup": [
+            [
+                "$TC action flush action hash",
+                0,
+                1,
+                255
+            ]
+        ],
+        "cmdUnderTest": "$TC action add action hash asym_l4 index 100",
+        "expExitCode": "0",
+        "verifyCmd": "$TC action list action hash",
+        "matchPattern": "action order [0-9]*: hash asym_l4 basis 0 pipe.*index 100 ref",
+        "matchCount": "1",
+        "teardown": [
+            "$TC action flush action hash"
+        ]
+    },
+    {
+        "id": "3a90",
+        "name": "Add hash action with asym_l4 algorithm with basis = 13",
+        "category": [
+            "actions",
+            "hash"
+        ],
+        "setup": [
+            [
+                "$TC action flush action hash",
+                0,
+                1,
+                255
+            ]
+        ],
+        "cmdUnderTest": "$TC action add action hash asym_l4 basis 13 index 100",
+        "expExitCode": "0",
+        "verifyCmd": "$TC action list action hash",
+        "matchPattern": "action order [0-9]*: hash asym_l4 basis 13 pipe.*index 100 ref",
+        "matchCount": "1",
+        "teardown": [
+            "$TC action flush action hash"
+        ]
+    },
+    {
+        "id": "a497",
+        "name": "Add hash action with asym_l4 algorithm with a negative basis (invalid)",
+        "category": [
+            "actions",
+            "hash"
+        ],
+        "setup": [
+            [
+                "$TC action flush action hash",
+                0,
+                1,
+                255
+            ]
+        ],
+        "cmdUnderTest": "$TC action add action hash asym_l4 basis -5 index 100",
+        "expExitCode": "255",
+        "verifyCmd": "$TC action list action hash",
+        "matchPattern": "action order [0-9]*: hash asym_l4 basis -5 pipe.*index 100 ref",
+        "matchCount": "0",
+        "teardown": [
+            "$TC action flush action hash"
+        ]
+    },
+    {
+        "id": "c3c6",
+        "name": "Add hash action with bpf mode and valid object-file",
+        "category": [
+            "actions",
+            "hash"
+        ],
+        "plugins": {
+            "requires": "buildebpfPlugin"
+        },
+        "setup": [
+            [
+                "$TC action flush action hash",
+                0,
+                1,
+                255
+            ]
+        ],
+        "cmdUnderTest": "$TC action add action hash bpf object-file $EBPFDIR/action_hash.o section hash-func index 667",
+        "expExitCode": "0",
+        "verifyCmd": "$TC action get action hash index 667",
+        "matchPattern": "action order [0-9]*: hash bpf action_hash.o:\\[hash-func\\] id [0-9]* tag [0-9a-f]{16}( jited)?  pipe.*index 667 ref",
+        "matchCount": "1",
+        "teardown": [
+            "$TC action flush action hash"
+        ]
+    }
+]

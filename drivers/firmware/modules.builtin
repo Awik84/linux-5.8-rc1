@@ -1,0 +1,4 @@
+drivers/firmware/dmi-sysfs.ko
+drivers/firmware/qemu_fw_cfg.ko
+drivers/firmware/efi/efivars.ko
+drivers/firmware/efi/efi-pstore.ko

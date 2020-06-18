@@ -1,0 +1,3 @@
+drivers/net/ethernet/cavium/common/cavium_ptp.ko
+drivers/net/phy/libphy.ko
+drivers/net/phy/fixed_phy.ko
