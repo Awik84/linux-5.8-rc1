@@ -1058,11 +1058,12 @@ static void mlx5e_tc_del_nic_flow(struct mlx5e_priv *priv,
 	struct mlx5_flow_attr *attr = flow->attr;
 	struct mlx5e_tc_table *tc = &priv->fs.tc;
 
-	if (!IS_ERR_OR_NULL(flow->rule[0]))
-		mlx5e_del_offloaded_nic_rule(priv, flow->rule[0], attr);
-	mlx5_fc_destroy(priv->mdev, attr->counter);
-
 	flow_flag_clear(flow, OFFLOADED);
+
+	if (flow_flag_test(flow, CT))
+		mlx5_tc_ct_delete_flow(flow->priv, flow, attr);
+	else if (!IS_ERR_OR_NULL(flow->rule[0]))
+		mlx5e_del_offloaded_nic_rule(priv, flow->rule[0], attr);
 
 	/* Remove root table if no rules are left to avoid
 	 * extra steering hops.
@@ -1079,6 +1080,8 @@ static void mlx5e_tc_del_nic_flow(struct mlx5e_priv *priv,
 
 	if (attr->action & MLX5_FLOW_CONTEXT_ACTION_MOD_HDR)
 		mlx5e_detach_mod_hdr(priv, flow);
+
+	mlx5_fc_destroy(priv->mdev, attr->counter);
 
 	if (flow_flag_test(flow, HAIRPIN))
 		mlx5e_hairpin_flow_del(priv, flow);
