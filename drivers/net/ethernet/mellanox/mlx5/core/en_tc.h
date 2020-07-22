@@ -67,6 +67,7 @@ struct mlx5_flow_attr {
 	struct mlx5_flow_table *dest_ft;
 	u8 inner_match_level;
 	u8 outer_match_level;
+	u32 flags;
 	union {
 		struct mlx5_esw_flow_attr esw_attr[0];
 		struct mlx5_nic_flow_attr nic_attr[0];

@@ -439,13 +439,12 @@ mlx5_tc_ct_entry_del_rule(struct mlx5_tc_ct_priv *ct_priv,
 {
 	struct mlx5_ct_zone_rule *zone_rule = &entry->zone_rules[nat];
 	struct mlx5_flow_attr *attr = zone_rule->attr;
-	struct mlx5_eswitch *esw = ct_priv->esw;
 
 	ct_dbg("Deleting ct entry rule in zone %d", entry->tuple.zone);
 
 	mlx5_tc_ct_rule_delete(ct_priv, zone_rule->rule, attr);
 	mlx5e_mod_hdr_detach(ct_priv->esw->dev,
-			     &esw->offloads.mod_hdr, zone_rule->mh);
+			     ct_priv->mod_hdr_tbl, zone_rule->mh);
 	kfree(attr);
 }
 
@@ -702,6 +701,7 @@ mlx5_tc_ct_entry_add_rule(struct mlx5_tc_ct_priv *ct_priv,
 	struct mlx5_eswitch *esw = ct_priv->esw;
 	struct mlx5_flow_spec *spec = NULL;
 	struct mlx5_flow_attr *attr;
+	u32 ex_attr_sz;
 	int err;
 
 	zone_rule->nat = nat;
@@ -710,7 +710,9 @@ mlx5_tc_ct_entry_add_rule(struct mlx5_tc_ct_priv *ct_priv,
 	if (!spec)
 		return -ENOMEM;
 
-	attr = mlx5_alloc_flow_attr(sizeof(struct mlx5_esw_flow_attr));
+	ex_attr_sz = esw_offloads_mode(esw) ? sizeof(struct mlx5_esw_flow_attr) :
+					      sizeof(struct mlx5_nic_flow_attr);
+	attr = mlx5_alloc_flow_attr(ex_attr_sz);
 	if (!attr) {
 		err = -ENOMEM;
 		goto err_attr;
@@ -732,7 +734,7 @@ mlx5_tc_ct_entry_add_rule(struct mlx5_tc_ct_priv *ct_priv,
 	attr->ft = nat ? ct_priv->ct_nat : ct_priv->ct;
 	attr->outer_match_level = MLX5_MATCH_L4;
 	attr->counter = entry->counter;
-	attr->esw_attr->flags |= MLX5_ESW_ATTR_FLAG_NO_IN_PORT;
+	attr->flags |= MLX5_ESW_ATTR_FLAG_NO_IN_PORT;
 
 	mlx5_tc_ct_set_tuple_match(netdev_priv(ct_priv->netdev), spec, flow_rule);
 	mlx5e_tc_match_to_reg_match(spec, ZONE_TO_REG,
@@ -755,7 +757,7 @@ mlx5_tc_ct_entry_add_rule(struct mlx5_tc_ct_priv *ct_priv,
 
 err_rule:
 	mlx5e_mod_hdr_detach(ct_priv->esw->dev,
-			     &esw->offloads.mod_hdr, zone_rule->mh);
+			     ct_priv->mod_hdr_tbl, zone_rule->mh);
 err_mod_hdr:
 	kfree(attr);
 err_attr:

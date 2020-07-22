@@ -332,7 +332,7 @@ mlx5_eswitch_add_offloaded_rule(struct mlx5_eswitch *esw,
 			dest[i].type = MLX5_FLOW_DESTINATION_TYPE_FLOW_TABLE;
 			dest[i].ft = attr->dest_ft;
 			i++;
-		} else if (esw_attr->flags & MLX5_ESW_ATTR_FLAG_SLOW_PATH) {
+		} else if (attr->flags & MLX5_ESW_ATTR_FLAG_SLOW_PATH) {
 			flow_act.flags |= FLOW_ACT_IGNORE_FLOW_LEVEL;
 			dest[i].type = MLX5_FLOW_DESTINATION_TYPE_FLOW_TABLE;
 			dest[i].ft = mlx5_chains_get_tc_end_ft(chains);
@@ -401,7 +401,7 @@ mlx5_eswitch_add_offloaded_rule(struct mlx5_eswitch *esw,
 		else
 			fdb = attr->ft;
 
-		if (!(esw_attr->flags & MLX5_ESW_ATTR_FLAG_NO_IN_PORT))
+		if (!(attr->flags & MLX5_ESW_ATTR_FLAG_NO_IN_PORT))
 			mlx5_eswitch_set_rule_source_port(esw, spec, esw_attr);
 	}
 	if (IS_ERR(fdb)) {
@@ -409,7 +409,7 @@ mlx5_eswitch_add_offloaded_rule(struct mlx5_eswitch *esw,
 		goto err_esw_get;
 	}
 
-	if (mlx5_eswitch_termtbl_required(esw, esw_attr, &flow_act, spec))
+	if (mlx5_eswitch_termtbl_required(esw, attr, &flow_act, spec))
 		rule = mlx5_eswitch_add_termtbl_rule(esw, fdb, spec, esw_attr,
 						     &flow_act, dest, i);
 	else
@@ -427,7 +427,7 @@ err_add_rule:
 	else if (attr->chain || attr->prio)
 		mlx5_chains_put_table(chains, attr->chain, attr->prio, 0);
 err_esw_get:
-	if (!(esw_attr->flags & MLX5_ESW_ATTR_FLAG_SLOW_PATH) && attr->dest_chain)
+	if (!(attr->flags & MLX5_ESW_ATTR_FLAG_SLOW_PATH) && attr->dest_chain)
 		mlx5_chains_put_table(chains, attr->dest_chain, 1, 0);
 err_create_goto_table:
 	return rule;
@@ -516,7 +516,7 @@ __mlx5_eswitch_del_rule(struct mlx5_eswitch *esw,
 
 	mlx5_del_flow_rules(rule);
 
-	if (!(esw_attr->flags & MLX5_ESW_ATTR_FLAG_SLOW_PATH)) {
+	if (!(attr->flags & MLX5_ESW_ATTR_FLAG_SLOW_PATH)) {
 		/* unref the term table */
 		for (i = 0; i < MLX5_MAX_FLOW_FWD_VPORTS; i++) {
 			if (esw_attr->dests[i].termtbl)
@@ -657,7 +657,7 @@ int mlx5_eswitch_add_vlan_action(struct mlx5_eswitch *esw,
 	if (err)
 		goto unlock;
 
-	esw_attr->flags &= ~MLX5_ESW_ATTR_FLAG_VLAN_HANDLED;
+	attr->flags &= ~MLX5_ESW_ATTR_FLAG_VLAN_HANDLED;
 
 	vport = esw_vlan_action_get_vport(esw_attr, push, pop);
 
@@ -665,7 +665,7 @@ int mlx5_eswitch_add_vlan_action(struct mlx5_eswitch *esw,
 		/* tracks VF --> wire rules without vlan push action */
 		if (esw_attr->dests[0].rep->vport == MLX5_VPORT_UPLINK) {
 			vport->vlan_refcount++;
-			esw_attr->flags |= MLX5_ESW_ATTR_FLAG_VLAN_HANDLED;
+			attr->flags |= MLX5_ESW_ATTR_FLAG_VLAN_HANDLED;
 		}
 
 		goto unlock;
@@ -696,7 +696,7 @@ skip_set_push:
 	}
 out:
 	if (!err)
-		esw_attr->flags |= MLX5_ESW_ATTR_FLAG_VLAN_HANDLED;
+		attr->flags |= MLX5_ESW_ATTR_FLAG_VLAN_HANDLED;
 unlock:
 	mutex_unlock(&esw->state_lock);
 	return err;
@@ -715,7 +715,7 @@ int mlx5_eswitch_del_vlan_action(struct mlx5_eswitch *esw,
 	if (mlx5_eswitch_vlan_actions_supported(esw->dev, 1))
 		return 0;
 
-	if (!(esw_attr->flags & MLX5_ESW_ATTR_FLAG_VLAN_HANDLED))
+	if (!(attr->flags & MLX5_ESW_ATTR_FLAG_VLAN_HANDLED))
 		return 0;
 
 	push = !!(attr->action & MLX5_FLOW_CONTEXT_ACTION_VLAN_PUSH);

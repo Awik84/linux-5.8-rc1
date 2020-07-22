@@ -328,7 +328,7 @@ struct mlx5_termtbl_handle;
 
 bool
 mlx5_eswitch_termtbl_required(struct mlx5_eswitch *esw,
-			      struct mlx5_esw_flow_attr *attr,
+			      struct mlx5_flow_attr *attr,
 			      struct mlx5_flow_act *flow_act,
 			      struct mlx5_flow_spec *spec);
 
@@ -411,7 +411,6 @@ struct mlx5_esw_flow_attr {
 		struct mlx5_core_dev *mdev;
 		struct mlx5_termtbl_handle *termtbl;
 	} dests[MLX5_MAX_FLOW_FWD_VPORTS];
-	u32	flags;
 	struct mlx5_pkt_reformat *decap_pkt_reformat;
 };
 
