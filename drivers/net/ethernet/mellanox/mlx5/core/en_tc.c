@@ -1085,6 +1085,8 @@ static void mlx5e_tc_del_nic_flow(struct mlx5e_priv *priv,
 
 	if (flow_flag_test(flow, HAIRPIN))
 		mlx5e_hairpin_flow_del(priv, flow);
+
+	kfree(flow->attr);
 }
 
 static void mlx5e_detach_encap(struct mlx5e_priv *priv,
@@ -1411,6 +1413,8 @@ static void mlx5e_tc_del_fdb_flow(struct mlx5e_priv *priv,
 
 	if (flow_flag_test(flow, L3_TO_L2_DECAP))
 		mlx5e_detach_decap(priv, flow);
+
+	kfree(flow->attr);
 }
 
 void mlx5e_tc_encap_flows_add(struct mlx5e_priv *priv,
@@ -5179,7 +5183,6 @@ static void _mlx5e_tc_del_flow(void *ptr, void *arg)
 	struct mlx5e_priv *priv = flow->priv;
 
 	mlx5e_tc_del_flow(priv, flow);
-	kfree(flow->attr);
 	kfree(flow);
 }
 

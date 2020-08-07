@@ -1712,7 +1712,7 @@ __mlx5_tc_ct_flow_offload_clear(struct mlx5e_priv *priv,
 	}
 
 	attr->ct_attr.ct_flow = ct_flow;
-	ct_flow->pre_ct_attr = attr;
+	ct_flow->pre_ct_attr = pre_ct_attr;
 	ct_flow->pre_ct_rule = rule;
 	*flow_rule = rule;
 
@@ -1723,7 +1723,7 @@ err_insert:
 err_set_registers:
 	netdev_warn(priv->netdev,
 		    "Failed to offload ct clear flow, err %d\n", err);
-	kfree(attr);
+	kfree(pre_ct_attr);
 err_attr:
 	kfree(ct_flow);
 
